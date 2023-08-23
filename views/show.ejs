@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/css/app.css">
+      <link rel="stylesheet" href="/css/star.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/products">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Add Product</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+            </ul>
+             
+          </div>
+        </div>
+      </nav>
+
+      <div class="row show">
+        <div class="card col-lg-6 col-sm-12" style="width: 22rem;">
+            <img src="<%=product.image%>" style="height: 200px;" class="card-img-top"  alt="image">
+            <div class="card-body">
+              <h5 class="card-title"><%= product.name %></h5>
+              <h4 class="card-title">$<%=product.price%></h4>
+              <p class="card-text"><%= product.desc %></p>
+              <a href="/product/<%=product._id %>" class="btn btn-primary">Buy now</a>
+              <a class="btn btn-success">Cart</a>
+              <a href="/product/<%= product._id %>/edit" class="btn btn-warning">Edit</a>
+              <form action="/product/<%=product._id%>?_method=Delete" method="post">
+                <button class="btn btn-danger">Delete</button>
+              </form>
+              
+            </div>
+          </div> 
+    
+          <div class="card col-lg-6 col-sm-12">
+            <h1>rating</h1>
+            <form action="/product/<%=product._id%>/review" method="post">
+              <fieldset class="starability-basic">
+                <legend>First rating:</legend>
+                <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                <input type="radio" id="first-rate1" name="rating" value="1" />
+                <label for="first-rate1" title="Terrible">1 star</label>
+                <input type="radio" id="first-rate2" name="rating" value="2" />
+                <label for="first-rate2" title="Not good">2 stars</label>
+                <input type="radio" id="first-rate3" name="rating" value="3" />
+                <label for="first-rate3" title="Average">3 stars</label>
+                <input type="radio" id="first-rate4" name="rating" value="4" />
+                <label for="first-rate4" title="Very good">4 stars</label>
+                <input type="radio" id="first-rate5" name="rating" value="5" />
+                <label for="first-rate5" title="Amazing">5 stars</label>
+              </fieldset>
+              <textarea class="form-control" name="comment" row="3" col="30"></textarea>
+              <button class="btn btn-primary">Save</button>
+            </form>
+
+            <% for(let review of product.reviews){ %>
+              <div class="card-body">
+                    <p class="starability-result" data-rating="<%= review.rating %>">
+                      Rated: 3 stars
+                    </p>
+                  <p class="card-text"><%= review.comment %></p>
+                  <a href="/product/<%=product._id%>/<%=review._id%>/delete" class="btn btn-danger btn-sm">Delete</a>
+              </div>
+           <% } %>
+          </div>
+      </div>
+     
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
