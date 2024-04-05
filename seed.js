@@ -1,12 +1,9 @@
-const Product = require('./models/product');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/E-com')
-    .then(()=>{
-        console.log('DB conected')
-    })
-    .catch((err)=>{
-        console.log(err);
-    })
+const Product = require('./models/product');
+
+mongoose.connect('mongodb://127.0.0.1:27017/E-com')
+    .then(()=>{console.log('E-com Conected')})
+    .catch((err)=>{console.log(err)});
 
 const dummy_data = [
     {
@@ -50,13 +47,9 @@ const dummy_data = [
         image:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
         price:220,
         desc:'Ziria Foldable Toy Drone with HQ WiFi Camera Remote Control for Kids Quadcopter with Gesture Selfie, Flips Bounce Mode,'
-    },
+    }
+]
 
-];
-
-async function seedData(){
-    await Product.create(dummy_data);
-    console.log('DB seeded');
-}
-
-seedData();
+Product.create(dummy_data)
+    .then(()=>{console.log('Db seeded')})
+    .catch(()=>{console.log('DB not Seeded')})

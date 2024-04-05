@@ -1,48 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const Product = require('../models/product')
+const Product = require('../models/product');
+const {validateProduct} = require('../middlewares/validation');
+
 router.get('/products',async (req,res)=>{
-    // res.send("hellow from products");
-    const products =await Product.find({});
-    res.render('index',{products});
+    const products = await Product.find({});
+    res.render('products/index',{products});
 })
-
 router.get('/product/new',(req,res)=>{
-    res.render('new');
-})
-router.post('/product',async (req,res)=>{
-    const {name ,image ,price ,desc} = req.body;
-    await Product.create({name,image,price,desc});
-    res.redirect('/products');
+    res.render('products/new')
 })
 
-router.get('/product/:id/edit',async (req,res)=>{
-    const {id }= req.params;
-    const {name ,image ,price ,desc} = req.body;
-    const product = await Product.findById(id);
+router.get('/products/:id',async (req,res)=>{
+    const {id} = req.params;
+    const product = await Product.findById(id).populate('reviews');
+    res.render('products/show',{product});
+})
 
-    res.render('edit',{product});
+router.post('/products',validateProduct,async (req,res)=>{
+     const {name,image,price,desc} = req.body;
+     await Product.create({name,image,price,desc});
+     req.flash('success','Product created sucessfully')
+     res.redirect('/products')
 })
-router.patch('/product/:id',async(req,res)=>{
-    const {id}= req.params;
-    const {name ,image ,price ,desc} = req.body;
-    await Product.findByIdAndUpdate(id,{name ,image ,price ,desc});
-    res.redirect(`/product/${id}`);
-})
- 
-router.delete('/product/:id',async (req,res)=>{
-    const {id}= req.params;
-    const {name ,image ,price ,desc} = req.body;
+router.delete('/products/:id',async (req,res)=>{
+    const {id} = req.params;
     await Product.findByIdAndDelete(id);
-    res.redirect('/products');
+    req.flash('success','Product delete sucessfully')
+    res.redirect('/products')
 })
 
-router.get('/product/:id',async (req,res)=>{
-    const { id } = req.params;
-    const product = await Product.findById(id).populate("reviews");
-    res.render('show',{product});
-})
-
-
-
-module.exports= router;
+module.exports = router;
