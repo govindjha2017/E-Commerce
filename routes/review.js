@@ -1,32 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const Review = require('../models/review');
 const Product = require('../models/product');
-router.post('/product/:id/review',async (req,res)=>{
-    const {id} = req.params;
-    const {rating , comment}= req.body;
+const Review = require('../models/review');
 
-    const newReview = await Review.create({rating,comment});
-    const product = await Product.findById(id);
-    product.reviews.push(newReview);
+router.post('/products/:id/add',async (req,res)=>{
+    const {id} = req.params;
+    const {rating,comment} = req.body;
+    const product = await Product.findById(id); 
+    const review = await Review.create({rating,comment}); 
+    product.reviews.push(review._id);
     product.save();
     res.redirect('back');
 })
 
-
-router.get('/product/:productId/:reviewId/delete',async(req,res)=>{
-    const {productId,reviewId} = req.params;
-    const product = await Product.findById(productId);
-    const review = await Review.findById(reviewId);
-    let n = product.reviews.indexOf(review._id);
-    console.log(n);
-    product.reviews.splice(n,1);
-    product.save();
-     await Review.findByIdAndDelete(reviewId);
-
-     res.redirect('back');
+router.delete('/product/:productId/delete/:reviewId',async (req,res)=>{
+   const {productId, reviewId} = req.params;
+   const product = await Product.findById(productId); 
+   let n = product.reviews.indexOf(reviewId);
+   product.reviews.splice(n,1);
+   product.save();
+   await Review.findByIdAndDelete(reviewId);
+   res.redirect('back');
 })
 
-
-
-module.exports= router;
+module.exports = router;

@@ -1,0 +1,20 @@
+<% layout('layout/boilerplate.ejs') %>
+<%- include('../partials/flash') %>
+
+<div class="d-flex flex-wrap justify-content-center gap-3">
+   <% for(let product of products){ %>
+    <div class="card" style="width: 18rem;">
+        <img src="<%=product.image%>" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title"><%=product.name%></h5>
+          <h5 class="card-title"><%=product.price%></h5>
+          <p class="card-text"><%=product.desc%></p>
+          <a href="#" class="btn btn-primary">Buy now</a>
+          <a href="/products/<%=product._id%>" class="btn btn-secondary">Show</a>
+          <form action="/products/<%=product._id%>?_method=delete" method="post">
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    <% } %>
+</div>
